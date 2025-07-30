@@ -1,4 +1,4 @@
-export default function agent_stats({ stats }) {
+export default function AgentStats({ stats }) {
   return (
     <div className="w-1/4 p-4 border-l overflow-y-scroll">
       <h2 className="text-xl font-semibold mb-4">Agent Stats</h2>

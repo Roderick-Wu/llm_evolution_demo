@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import round_slider from '@/components/round_slider';
-import agent_think from '@/components/agent_think';
-import agent_stats from '@/components/agent_stats';
-import population_chart from '@/components/population_chart';
+import RoundSlider from '@/components/round_slider';
+import AgentThink from '@/components/agent_think';
+import AgentStats from '@/components/agent_stats';
+import PopulationChart from '@/components/population_chart';
 
 type reputation = {
   cooperation_rate: number | null;
@@ -26,7 +26,12 @@ type step_data = {
 type game_data = {
   game: {type: string; 
     kwargs: {
-        playoff_matrix: [CC: number[], CD: number[], DC: number[], DD: number[]]
+        payoff_matrix: {
+        CC: number[],
+        CD: number[],
+        DC: number[],
+        DD: number[]
+        };
     }
   }; 
   evolution: {initial_population: string; steps: number;}; 
@@ -36,17 +41,17 @@ type game_data = {
 
 export default function Home() {
   const [game_data, set_all] = useState<game_data | null>(null);
-  const [round_data, set_round] = useState<step_data[]>([]);
+  const [round_data, set_round] = useState<step_data[] | null>(null);
   const [selected_round, set_selected_round] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
 
-      const setup_game = await fetch(`@/test_setup.json`);
+      const setup_game = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_game_data.json`);
       const game_info = await setup_game.json();
       set_all(game_info);
 
-      const res = await fetch(`@/test_data.json`);
+      const res = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_round_data.json`);
       const json = await res.json();
       set_round(json);
 
@@ -70,14 +75,13 @@ export default function Home() {
     const clean_model = model.trim();
     const clean_type = type.replace(')', '').trim();
 
-    // Use only the first occurrence of the thought
-    if (!agent_thoughts[clean_model]) {
-      agent_thoughts[clean_model] = {
-        model: clean_model,
-        type: clean_type,
-        thought: agent.response.startsWith('Thought:') ? agent.response : `Response: ${agent.response}`,
-      };
-    }
+    // if (!agent_thoughts[clean_model]) {
+    //   agent_thoughts[clean_model] = {
+    //     model: clean_model,
+    //     type: clean_type,
+    //     thought: agent.response.startsWith('Thought:') ? agent.response : `Response: ${agent.response}`,
+    //   };
+    // }
 
     // Aggregate stats
     if (!agent_stats[clean_model]) {
@@ -106,16 +110,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen">
-      <round_slider
-        maxRounds={data.length - 1}
-        selectedRound={selectedRound}
-        onChange={setSelectedRound}
+      <RoundSlider
+        maxRounds={round_data.length - 1}
+        selectedRound={selected_round}
+        onChange={set_selected_round}
       />
       <div className="flex flex-1 overflow-hidden">
-        <agent_think thoughts={thoughts} />
-        <agent_stats stats={stats} />
+        <AgentThink thoughts={thoughts} />
+        <AgentStats stats={stats} />
       </div>
-      <population_chart population={populationChart} />
+      <PopulationChart population={populationChart} />
     </div>
   );
 } 

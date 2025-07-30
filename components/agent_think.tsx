@@ -1,4 +1,4 @@
-export default function agent_think({ thoughts }) {
+export default function AgentThink({ thoughts }) {
   return (
     <div className="flex-1 overflow-y-scroll p-4">
       <h2 className="text-xl font-semibold mb-4">Agent Thoughts</h2>

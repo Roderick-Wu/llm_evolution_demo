@@ -1,6 +1,6 @@
 import { Pie } from 'react-chartjs-2';
 
-export default function population_chart({ population }) {
+export default function PopulationChart({ population }) {
   const data = {
     labels: population.map(p => p.model),
     datasets: [{

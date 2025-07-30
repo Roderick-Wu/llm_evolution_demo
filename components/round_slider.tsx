@@ -1,4 +1,4 @@
-export default function round_slider({ maxRounds, selectedRound, onChange }) {
+export default function RoundSlider({ maxRounds, selectedRound, onChange }) {
   return (
     <div className="w-full p-4">
       <label className="block text-sm font-semibold mb-2">Round: {selectedRound}</label>
