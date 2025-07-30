@@ -1,4 +1,14 @@
-export default function AgentThink({ thoughts }) {
+interface Thought {
+  model: string;
+  type: string;
+  thought: string;
+}
+
+interface AgentThinkProps {
+  thoughts: Thought[];
+}
+
+export default function AgentThink({ thoughts }: AgentThinkProps) {
   return (
     <div className="flex-1 overflow-y-scroll p-4">
       <h2 className="text-xl font-semibold mb-4">Agent Thoughts</h2>
