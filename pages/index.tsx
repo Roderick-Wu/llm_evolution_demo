@@ -146,9 +146,13 @@ return (
         </div>
     </div>
 
-    <div className="h-1 overflow-y-auto">
+    <div className="h-1/2">
       <PopulationChart population={populationChart} />
     </div>
+
+    <header className="bg-blue-600 text-white p-4 w-full mt-24">
+      
+    </header>
     
 </div>
 
