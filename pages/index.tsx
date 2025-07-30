@@ -80,7 +80,7 @@ export default function Home() {
       agent_thoughts[clean_model] = {
         model: clean_model,
         type: clean_type,
-        thought: agent.response.startsWith('Thought:') ? agent.response : `Response: ... sitting out this round ...`,
+        thought: agent.response.startsWith('Thought:') ? agent.response : `... sitting out this round ...`,
       };
     }
 
