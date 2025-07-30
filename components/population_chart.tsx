@@ -1,3 +1,11 @@
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+ChartJS.register(ArcElement, Tooltip, Legend);
+
 import { Pie } from 'react-chartjs-2';
 
 export default function PopulationChart({ population }) {
@@ -10,9 +18,9 @@ export default function PopulationChart({ population }) {
   };
 
   return (
-    <div className="w-full h-64 p-4">
-      <h2 className="text-xl font-semibold mb-4">Population Proportions</h2>
-      <Pie data={data} />
+    <div className="w-64 h-48 p-2 mx-auto">
+    <h2 className="text-lg font-medium mb-2 text-center">Population</h2>
+    <Pie data={data} />
     </div>
   );
 }

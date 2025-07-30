@@ -3,6 +3,7 @@ import RoundSlider from '@/components/round_slider';
 import AgentThink from '@/components/agent_think';
 import AgentStats from '@/components/agent_stats';
 import PopulationChart from '@/components/population_chart';
+//import '@/globals.css';
 
 type reputation = {
   cooperation_rate: number | null;
@@ -75,13 +76,13 @@ export default function Home() {
     const clean_model = model.trim();
     const clean_type = type.replace(')', '').trim();
 
-    // if (!agent_thoughts[clean_model]) {
-    //   agent_thoughts[clean_model] = {
-    //     model: clean_model,
-    //     type: clean_type,
-    //     thought: agent.response.startsWith('Thought:') ? agent.response : `Response: ${agent.response}`,
-    //   };
-    // }
+    if (!agent_thoughts[clean_model]) {
+      agent_thoughts[clean_model] = {
+        model: clean_model,
+        type: clean_type,
+        thought: agent.response.startsWith('Thought:') ? agent.response : `Response: ... sitting out this round ...`,
+      };
+    }
 
     // Aggregate stats
     if (!agent_stats[clean_model]) {
@@ -108,18 +109,49 @@ export default function Home() {
     count: population[i] * 100, // scale for visualization
   }));
 
-  return (
-    <div className="flex flex-col h-screen">
-      <RoundSlider
-        maxRounds={round_data.length - 1}
-        selectedRound={selected_round}
-        onChange={set_selected_round}
-      />
-      <div className="flex flex-1 overflow-hidden">
-        <AgentThink thoughts={thoughts} />
-        <AgentStats stats={stats} />
+return (
+  <div className="flex flex-col min-h-screen bg-gray-100 shadow">
+    <header className="bg-blue-600 text-white p-4 w-full">
+      <h1 className="text-2xl font-bold text-center w-full">LLM Evolution Demo</h1>
+    </header>
+    
+    <div className="flex flex-col w-1/3 p-4 border-r overflow-y-auto">
+
+      <div className="mb-24">
+        <h2 className="text-xl font-semibold mb-4">Game Setup</h2>
+        <div className="mb-2"><strong>Game Type:</strong> {game_data?.game.type}</div>
+        <div className="mb-2"><strong>Mechanism:</strong> {game_data?.mechanism.type}</div>
+        <div className="mb-2"><strong>Initial Population:</strong> {game_data?.evolution.initial_population}</div>
+        <div><strong>Rounds:</strong> {game_data?.evolution.steps}</div>
       </div>
+
+      <div>
+        <h1 className="text-xl font-semibold mb-4">Round Select</h1>
+        <div className="text-center">
+          <RoundSlider
+            maxRounds={round_data.length - 1}
+            selectedRound={selected_round}
+            onChange={set_selected_round}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div className="flex flex-row flex-1 p-4 overflow-hidden">
+        <div className="flex-1 overflow-hidden">
+            <AgentThink thoughts={thoughts} />
+        </div>
+        <div className="flex-1 overflow-hidden">
+            <AgentStats stats={stats} />
+        </div>
+    </div>
+
+    <div className="h-1 overflow-y-auto">
       <PopulationChart population={populationChart} />
     </div>
-  );
+    
+</div>
+
+);
+
 } 
