@@ -67,7 +67,7 @@ export default function Home() {
   const this_round_data = round_data[selected_round] || {};
 
 
-  const agent_thoughts: Record<string, string> = {};
+  const agent_thoughts: Record<string, { model: string; type: string; thought: string }> = {};
   const agent_stats: Record<string, { score: number; reputation: reputation }> = {};
   const population = this_round_data.population;
 

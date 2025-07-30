@@ -8,7 +8,16 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 import { Pie } from 'react-chartjs-2';
 
-export default function PopulationChart({ population }) {
+type PopulationItem = {
+  model: string;
+  count: number;
+};
+
+interface PopulationChartProps {
+  population: PopulationItem[];
+}
+
+export default function PopulationChart({ population }: PopulationChartProps) {
   const data = {
     labels: population.map(p => p.model),
     datasets: [{

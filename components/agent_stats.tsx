@@ -1,4 +1,14 @@
-export default function AgentStats({ stats }) {
+type AgentStat = {
+  model: string;
+  score: number;
+  reputation: number;
+};
+
+type AgentStatsProps = {
+  stats: AgentStat[];
+};
+
+export default function AgentStats({ stats }: AgentStatsProps) {
   return (
     <div className="w-1/2 p-4 border-l overflow-y-scroll">
       <h2 className="text-xl font-semibold mb-12">Agent Stats</h2>
