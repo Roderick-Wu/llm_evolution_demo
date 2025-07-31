@@ -127,7 +127,7 @@ return (
             <div className="game-setup-item"><strong>Rounds:</strong> {game_data?.evolution.steps}</div>
           </div>
 
-          <div className="chart-container">
+          <div className="chart-section">
             <h2 className="upperbar-title">Population Chart</h2>
             <PopulationChart population={populationChart} />
           </div>

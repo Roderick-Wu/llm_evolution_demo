@@ -27,9 +27,6 @@ export default function PopulationChart({ population }: PopulationChartProps) {
   };
 
 return (
-    <div className="chart-wrapper">
-      {/* <h2 className="chart-title">Population Distribution</h2> */}
-      
       <div className="chart-content">
         <div className="chart-inner">
           {data && data.datasets && data.datasets[0]?.data?.length > 0 ? (
@@ -68,28 +65,5 @@ return (
           )}
         </div>
       </div>
-      
-      {data && data.datasets && data.datasets[0]?.data?.length > 0 && (
-        <>
-          <div className="chart-stats">
-            <h3 className="chart-stats-title">Quick Stats</h3>
-            <div className="chart-stats-grid">
-              {data.labels?.map((label, index) => {
-                const value = data.datasets[0].data[index];
-                const total = data.datasets[0].data.reduce((sum, val) => sum + val, 0);
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
-                return (
-                  <div key={index} className="chart-stats-item">
-                    <span className="chart-stats-label">{label}:</span>
-                    <span className="chart-stats-value">{percentage}%</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          
-        </>
-      )}
-    </div>
   );
 }

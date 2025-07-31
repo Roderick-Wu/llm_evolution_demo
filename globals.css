@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 
-
-
 .app-container {
   display: flex;
   flex-direction: column;
@@ -42,19 +40,18 @@
 
 .info-section {
   margin-bottom: 1.5rem;
-  flex: 2.5; 
+  flex: 1; 
 }
 
-.chart-container {
+.chart-section {
   height: 16rem;
-  flex: 1.5;
+  flex: 1;
   padding-right: 6rem;
 }
 
-
 .slider-section {
   margin-bottom: 1.5rem;
-  flex: 6;
+  flex: 1;
 }
 
 .upperbar-title {
@@ -86,17 +83,15 @@
 }
 
 .thoughts-section {
-  flex: 7;
+  flex: 1;
   min-height: 12rem;
   overflow: hidden;
-  width: 70%;
 }
 
 .stats-section {
-  flex: 3;
+  flex: 1;
   min-height: 12rem;
   overflow: hidden;
-  width: 30%;
 }
 
 /* Round Slider Component */
@@ -478,7 +473,24 @@
   color: #374151;
 }
 
-/* Tablet styles (768px and up) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* When screen is big enough */
 @media (min-width: 768px) {
   .app-title {
     font-size: 1.5rem;
@@ -486,7 +498,7 @@
   .upperbar {
     flex-direction: row;
     justify-content: space-between;
-    padding: 1rem 2rem;
+    padding: 1rem 2rem 6rem 2rem;
   }
   .agents-container {
     flex-direction: row;
@@ -496,8 +508,31 @@
     min-height: 0;
   }
   
-  .chart-container {
-    height: 20rem;
+  .info-section {
+    height: 16rem;
+    flex: 2;
+  }
+
+  .chart-section {
+    height: 16rem;
+    flex: 2;
+    padding-right: 1rem;
+  }
+
+  .slider-section {
+    padding-left: 10rem; 
+    height: 16rem;
+    flex: 5;
+  }
+
+  .thoughts-section {
+    flex: 4;
+    min-height: 16rem;
+  }
+
+  .stats-section {
+    flex: 2;
+    min-height: 16rem;
   }
   
   .round-slider {
@@ -607,55 +642,5 @@
   .chart-total {
     font-size: 0.875rem;
     margin-top: 1rem;
-  }
-}
-
-/* Desktop styles (1024px and up) */
-@media (min-width: 1024px) {
-  .main-layout {
-    flex-direction: column;
-  }
-  
-  .sidebar {
-    width: 33.333333%;
-    border-right: 1px solid #e5e7eb;
-    background-color: transparent;
-    order: 0;
-  }
-  
-  .sidebar-section:first-child {
-    margin-bottom: 6rem;
-  }
-  
-  .sidebar-title {
-    font-size: 1.25rem;
-  }
-  
-  .game-setup-item {
-    font-size: 1rem;
-  }
-  
-  .content-area {
-    order: 0;
-  }
-  
-  .chart-container {
-    height: 16rem;
-  }
-
-  .info-section {
-    height: 16rem;
-  }
-
-  .slider-section {
-    height: 16rem;
-  }
-  
-  .chart-wrapper {
-    max-width: 32rem;
-  }
-  
-  .chart-title {
-    font-size: 1.25rem;
   }
 }
