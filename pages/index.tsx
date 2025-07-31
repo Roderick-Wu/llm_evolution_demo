@@ -48,11 +48,11 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
 
-      const setup_game = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/example_config.json`);
+      const setup_game = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/config.json`);
       const game_info = await setup_game.json();
       set_all(game_info);
 
-      const res = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/example_evolution.json`);
+      const res = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/evolution.json`);
       const json = await res.json();
       set_round(json);
 
