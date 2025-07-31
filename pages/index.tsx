@@ -10,7 +10,7 @@ type reputation = {
   betrayal_rate: number | null;
 };
 
-type agent_match = {  
+type agent_match = {
   name: string;
   action: string;
   points: number;
@@ -25,7 +25,7 @@ type step_data = {
 };
 
 type game_data = {
-  game: {type: string; 
+  game: {type: string;
     kwargs: {
         payoff_matrix: {
         CC: number[],
@@ -34,8 +34,8 @@ type game_data = {
         DD: number[]
         };
     }
-  }; 
-  evolution: {initial_population: string; steps: number;}; 
+  };
+  evolution: {initial_population: string; steps: number;};
   mechanism: {type: string};
   agents: {llm: {model: string, kwargs: {max_new_tokens: number}}; type: string; }[];
 };
@@ -48,11 +48,11 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
 
-      const setup_game = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_game_data.json`);
+      const setup_game = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/example_config.json`);
       const game_info = await setup_game.json();
       set_all(game_info);
 
-      const res = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_round_data.json`);
+      const res = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/example_evolution.json`);
       const json = await res.json();
       set_round(json);
 
@@ -114,11 +114,11 @@ return (
       <header className="app-header">
         <h1 className="app-title">LLM Evolution Demo</h1>
       </header>
-      
+
       <div className="main-layout">
 
         <div className="upperbar">
-            
+
           <div className="info-section">
             <h2 className="upperbar-title">Game Setup</h2>
             <div className="game-setup-item"><strong>Game Type:</strong> {game_data?.game.type}</div>
@@ -161,4 +161,4 @@ return (
     </div>
   );
 
-} 
+}
