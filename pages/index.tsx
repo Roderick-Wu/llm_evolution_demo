@@ -110,52 +110,55 @@ export default function Home() {
   }));
 
 return (
-  <div className="flex flex-col min-h-screen bg-gray-100 shadow">
-    <header className="bg-blue-600 text-white p-4 w-full">
-      <h1 className="text-2xl font-bold text-center w-full">LLM Evolution Demo</h1>
-    </header>
-    
-    <div className="flex flex-col w-1/3 p-4 border-r overflow-y-auto">
-
-      <div className="mb-24">
-        <h2 className="text-xl font-semibold mb-4">Game Setup</h2>
-        <div className="mb-2"><strong>Game Type:</strong> {game_data?.game.type}</div>
-        <div className="mb-2"><strong>Mechanism:</strong> {game_data?.mechanism.type}</div>
-        <div className="mb-2"><strong>Initial Population:</strong> {game_data?.evolution.initial_population}</div>
-        <div><strong>Rounds:</strong> {game_data?.evolution.steps}</div>
-      </div>
-
-      <div>
-        <h1 className="text-xl font-semibold mb-4">Round Select</h1>
-        <div className="text-center">
-          <RoundSlider
-            maxRounds={round_data.length - 1}
-            selectedRound={selected_round}
-            onChange={set_selected_round}
-          />
-        </div>
-      </div>
-    </div>
-
-    <div className="flex flex-row flex-1 p-4 overflow-hidden">
-        <div className="flex-1 overflow-hidden">
-            <AgentThink thoughts={thoughts} />
-        </div>
-        <div className="flex-1 overflow-hidden">
-            <AgentStats stats={stats} />
-        </div>
-    </div>
-
-    <div className="h-1/2">
-      <PopulationChart population={populationChart} />
-    </div>
-
-    <header className="bg-blue-600 text-white p-4 w-full mt-24">
+    <div className="app-container">
+      <header className="app-header">
+        <h1 className="app-title">LLM Evolution Demo</h1>
+      </header>
       
-    </header>
-    
-</div>
+      <div className="main-layout">
 
-);
+        <div className="upperbar">
+            
+          <div className="info-section">
+            <h2 className="upperbar-title">Game Setup</h2>
+            <div className="game-setup-item"><strong>Game Type:</strong> {game_data?.game.type}</div>
+            <div className="game-setup-item"><strong>Mechanism:</strong> {game_data?.mechanism.type}</div>
+            <div className="game-setup-item"><strong>Initial Population:</strong> {game_data?.evolution.initial_population}</div>
+            <div className="game-setup-item"><strong>Rounds:</strong> {game_data?.evolution.steps}</div>
+          </div>
+
+          <div className="chart-container">
+            <h2 className="upperbar-title">Population Chart</h2>
+            <PopulationChart population={populationChart} />
+          </div>
+
+          <div className="slider-section">
+            <h2 className="upperbar-title">Round Select</h2>
+            <div className="text-center">
+              <RoundSlider
+                maxRounds={round_data.length - 1}
+                selectedRound={selected_round}
+                onChange={set_selected_round}
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <div className="content-area">
+
+          <div className="agents-container">
+            <div className="thoughts-section">
+              <AgentThink thoughts={thoughts} />
+            </div>
+            <div className="stats-section">
+              <AgentStats stats={stats} />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 
 } 

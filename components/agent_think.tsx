@@ -9,16 +9,25 @@ interface AgentThinkProps {
 }
 
 export default function AgentThink({ thoughts }: AgentThinkProps) {
-  return (
-    <div className="flex-1 overflow-y-scroll p-4">
-      <h2 className="text-xl font-semibold mb-4">Agent Thoughts</h2>
-      <div className="space-y-4">
-        {thoughts.map(({ model, type, thought }, i) => (
-          <div key={i} className="bg-white rounded-xl p-4 shadow">
-            <div className="font-semibold">{model} ({type})</div>
-            <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{thought}</p>
-          </div>
-        ))}
+return (
+    <div className="thoughts-container">
+      <h2 className="thoughts-header">Agent Thoughts</h2>
+      
+      <div className="thoughts-list">
+        {
+          thoughts.map(({ model, type, thought }, i) => (
+            <div key={i} className="thought-card">
+              <div className="thought-header">
+                <span className="thought-model">{model}</span>
+                <span className="thought-type">{type}</span>
+              </div>
+              
+              <div className="thought-content">
+                <p>{thought}</p>
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   );

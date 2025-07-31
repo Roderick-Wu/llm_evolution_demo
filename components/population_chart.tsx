@@ -26,10 +26,70 @@ export default function PopulationChart({ population }: PopulationChartProps) {
     }]
   };
 
-  return (
-    <div className="w-64 h-48 p-2 mx-auto">
-    <h2 className="text-lg font-medium mb-2 text-center">Population</h2>
-    <Pie data={data} />
+return (
+    <div className="chart-wrapper">
+      {/* <h2 className="chart-title">Population Distribution</h2> */}
+      
+      <div className="chart-content">
+        <div className="chart-inner">
+          {data && data.datasets && data.datasets[0]?.data?.length > 0 ? (
+            <div className="chart-canvas">
+              <Pie 
+                data={data}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: {
+                      position: window.innerWidth < 768 ? 'bottom' : 'right',
+                      labels: {
+                        boxWidth: window.innerWidth < 768 ? 12 : 16,
+                        padding: window.innerWidth < 768 ? 8 : 12,
+                        font: {
+                          size: window.innerWidth < 768 ? 11 : 12
+                        },
+                        usePointStyle: true
+                      }
+                    }
+                  }
+                }}
+              />
+            </div>
+          ) : (
+            <div className="chart-empty">
+              <div className="chart-empty-icon">
+                <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <p><strong>No population data</strong></p>
+              <p>Data will appear when simulation starts</p>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {data && data.datasets && data.datasets[0]?.data?.length > 0 && (
+        <>
+          <div className="chart-stats">
+            <h3 className="chart-stats-title">Quick Stats</h3>
+            <div className="chart-stats-grid">
+              {data.labels?.map((label, index) => {
+                const value = data.datasets[0].data[index];
+                const total = data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+                return (
+                  <div key={index} className="chart-stats-item">
+                    <span className="chart-stats-label">{label}:</span>
+                    <span className="chart-stats-value">{percentage}%</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+        </>
+      )}
     </div>
   );
 }
