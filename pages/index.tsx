@@ -10,7 +10,7 @@ type reputation = {
   betrayal_rate: number | null;
 };
 
-type agent_match = {  
+type agent_match = {
   name: string;
   action: string;
   points: number;
@@ -18,26 +18,36 @@ type agent_match = {
   reputation: reputation;
 };
 
+type evolution_stats = {
+  population: number;
+  name: string;
+  fitness: number;
+};
+
 type step_data = {
   step: number;
-  population: number[];
+  stats: evolution_stats[];
   match_records: agent_match[][];
 };
 
 type game_data = {
-  game: {type: string; 
+  game: {
+    type: string;
     kwargs: {
-        payoff_matrix: {
-        CC: number[],
-        CD: number[],
-        DC: number[],
-        DD: number[]
-        };
-    }
-  }; 
-  evolution: {initial_population: string; steps: number;}; 
-  mechanism: {type: string};
-  agents: {llm: {model: string, kwargs: {max_new_tokens: number}}; type: string; }[];
+      payoff_matrix: {
+        CC: number[];
+        CD: number[];
+        DC: number[];
+        DD: number[];
+      };
+    };
+  };
+  evolution: { initial_population: string; steps: number };
+  mechanism: { type: string };
+  agents: {
+    llm: { model: string; kwargs: { max_new_tokens: number } };
+    type: string;
+  }[];
 };
 
 export default function Home() {
@@ -47,40 +57,46 @@ export default function Home() {
 
   useEffect(() => {
     const fetchData = async () => {
-
-      const setup_game = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_game_data.json`);
+      const setup_game = await fetch(
+        `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/config.json`
+      );
       const game_info = await setup_game.json();
       set_all(game_info);
 
-      const res = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/refs/heads/main/results/reputation/evolution.json`);
+      const res = await fetch(
+        `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/evolution.json`
+      );
       const json = await res.json();
       set_round(json);
-
     };
     fetchData();
   }, []);
 
-  if (round_data == null || round_data.length === 0) return <div className="p-4">Loading...</div>;
-
-
+  if (round_data == null || round_data.length === 0)
+    return <div className="p-4">Loading...</div>;
 
   const this_round_data = round_data[selected_round] || {};
 
-
-  const agent_thoughts: Record<string, { model: string; type: string; thought: string }> = {};
-  const agent_stats: Record<string, { score: number; reputation: reputation }> = {};
-  const population = this_round_data.population;
+  const agent_thoughts: Record<
+    string,
+    { model: string; type: string; thought: string }
+  > = {};
+  const agent_stats: Record<string, { score: number; reputation: reputation }> =
+    {};
+  const evolution_stats = this_round_data.stats;
 
   this_round_data.match_records.flat().forEach((agent) => {
-    const [model, type] = agent.name.split('(');
+    const [model, type] = agent.name.split("(");
     const clean_model = model.trim();
-    const clean_type = type.replace(')', '').trim();
+    const clean_type = type.replace(")", "").trim();
 
     if (!agent_thoughts[clean_model]) {
       agent_thoughts[clean_model] = {
         model: clean_model,
         type: clean_type,
-        thought: agent.response.startsWith('Thought:') ? agent.response : `... sitting out this round ...`,
+        thought: agent.response.startsWith("Thought:")
+          ? agent.response
+          : `... sitting out this round ...`,
       };
     }
 
@@ -94,9 +110,11 @@ export default function Home() {
     agent_stats[clean_model].score += agent.points;
   });
 
-  const thoughts = Object.entries(agent_thoughts).map(([model, thoughtObj]) => ({
-    ...thoughtObj,
-  }));
+  const thoughts = Object.entries(agent_thoughts).map(
+    ([model, thoughtObj]) => ({
+      ...thoughtObj,
+    })
+  );
 
   const stats = Object.entries(agent_stats).map(([model, stat], i) => ({
     model,
@@ -106,25 +124,32 @@ export default function Home() {
 
   const populationChart = Object.keys(agent_stats).map((model, i) => ({
     model,
-    count: population[i] * 100, // scale for visualization
+    count: evolution_stats[i].population * 100, // scale for visualization
   }));
 
-return (
+  return (
     <div className="app-container">
       <header className="app-header">
         <h1 className="app-title">LLM Evolution Demo</h1>
       </header>
-      
-      <div className="main-layout">
 
+      <div className="main-layout">
         <div className="upperbar">
-            
           <div className="info-section">
             <h2 className="upperbar-title">Game Setup</h2>
-            <div className="game-setup-item"><strong>Game Type:</strong> {game_data?.game.type}</div>
-            <div className="game-setup-item"><strong>Mechanism:</strong> {game_data?.mechanism.type}</div>
-            <div className="game-setup-item"><strong>Initial Population:</strong> {game_data?.evolution.initial_population}</div>
-            <div className="game-setup-item"><strong>Rounds:</strong> {game_data?.evolution.steps}</div>
+            <div className="game-setup-item">
+              <strong>Game Type:</strong> {game_data?.game.type}
+            </div>
+            <div className="game-setup-item">
+              <strong>Mechanism:</strong> {game_data?.mechanism.type}
+            </div>
+            <div className="game-setup-item">
+              <strong>Initial Population:</strong>{" "}
+              {game_data?.evolution.initial_population}
+            </div>
+            <div className="game-setup-item">
+              <strong>Rounds:</strong> {game_data?.evolution.steps}
+            </div>
           </div>
 
           <div className="chart-section">
@@ -142,11 +167,9 @@ return (
               />
             </div>
           </div>
-
         </div>
 
         <div className="content-area">
-
           <div className="agents-container">
             <div className="thoughts-section">
               <AgentThink thoughts={thoughts} />
@@ -156,9 +179,7 @@ return (
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
-
-} 
+}
