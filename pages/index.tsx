@@ -50,30 +50,92 @@ type game_data = {
   }[];
 };
 
+const fetchRepositories = async () => {
+  try {
+    const response = await fetch('https://api.github.com/repos/Xiao215/agent-tournament/contents/results');
+    const contents = await response.json();
+    
+    // Filter for directories only
+    const directories = contents
+      .filter((item: any) => item.type === 'dir')
+      .map((item: any) => item.name);
+    
+    return directories;
+  } catch (error) {
+    console.error('Error fetching repositories:', error);
+    return ['reputation'];
+  }
+};
+
 export default function Home() {
   const [game_data, set_all] = useState<game_data | null>(null);
   const [round_data, set_round] = useState<step_data[] | null>(null);
   const [selected_round, set_selected_round] = useState(0);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const setup_game = await fetch(
-        `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/config.json`
-      );
-      const game_info = await setup_game.json();
-      set_all(game_info);
+  const [available_repos, set_available_repos] = useState<string[]>([]);
+  const [select_repo, set_select_repo] = useState("");
 
-      const res = await fetch(
-        `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/reputation/evolution.json`
-      );
-      const json = await res.json();
-      set_round(json);
+  const config_link = `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/${select_repo}/config.json`;
+  const evolution_link = `https://raw.githubusercontent.com/Xiao215/agent-tournament/main/results/${select_repo}/evolution.json`;
+
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      const repos = await fetchRepositories();
+      set_available_repos(repos);
+      //repos.push("test");
+      set_select_repo(repos[0]);
     };
-    fetchData();
+    fetchRepos();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const setup_game = await fetch(config_link);
+        const game_info = await setup_game.json();
+        set_all(game_info);
+
+        const res = await fetch(evolution_link);
+        const json = await res.json();
+        set_round(json);
+      } catch (error) {
+        set_all(null);
+        set_round(null);
+      }
+    };
+    fetchData();
+  }, [select_repo]);
+
+
+
   if (round_data == null || round_data.length === 0)
-    return <div className="p-4">Loading...</div>;
+    return (
+      <div className="app-container">
+        <header className="app-header">
+          <h1 className="app-title">LLM Evolution Demo</h1>
+        </header>
+
+        <div className="controls-section">
+          <h2 className="controls-title">Controls</h2>
+          <div className="json-select">
+            Select json files:
+            <div className="json-dropdown">
+              <select
+                value={select_repo}
+                onChange={(e) => set_select_repo(e.target.value)}
+              >
+                {available_repos.map((repo) => (
+                  <option key={repo} value={repo}>
+                    {repo.charAt(0).toUpperCase() + repo.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 
   const this_round_data = round_data[selected_round] || {};
 
@@ -132,6 +194,25 @@ export default function Home() {
       <header className="app-header">
         <h1 className="app-title">LLM Evolution Demo</h1>
       </header>
+
+      <div className="controls-section">
+        {/* <h2 className="controls-title">Controls</h2> */}
+        <div className="json-select">
+          Select directory:
+          <div className="json-dropdown">
+            <select
+              value={select_repo}
+              onChange={(e) => set_select_repo(e.target.value)}
+            >
+              {available_repos.map((repo) => (
+                <option key={repo} value={repo}>
+                  {repo.charAt(0).toUpperCase() + repo.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
 
       <div className="main-layout">
         <div className="upperbar">

@@ -24,6 +24,14 @@
   width: 100%;
 }
 
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
 .main-layout {
   display: flex;
   flex-direction: column;

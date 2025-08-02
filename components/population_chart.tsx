@@ -3,8 +3,9 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  Colors,
 } from 'chart.js';
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Colors);
 
 import { Pie } from 'react-chartjs-2';
 
@@ -22,7 +23,10 @@ export default function PopulationChart({ population }: PopulationChartProps) {
     labels: population.map(p => p.model),
     datasets: [{
       data: population.map(p => p.count),
-      backgroundColor: ['#60A5FA', '#FBBF24', '#34D399'],
+      backgroundColor: population.map((_, i) => {
+        const hue = (i * 360) / population.length;
+        return `hsl(${hue}, 70%, 50%)`;
+      })
     }]
   };
 
