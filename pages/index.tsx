@@ -52,7 +52,7 @@ export default function Home() {
       const game_info = await setup_game.json();
       set_all(game_info);
 
-      const res = await fetch(`https://raw.githubusercontent.com/Roderick-Wu/llm_evolution_demo/main/test_round_data.json`);
+      const res = await fetch(`https://raw.githubusercontent.com/Xiao215/agent-tournament/refs/heads/main/results/reputation/evolution.json`);
       const json = await res.json();
       set_round(json);
 
