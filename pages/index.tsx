@@ -47,6 +47,7 @@ type game_data = {
   agents: {
     llm: { model: string; kwargs: { max_new_tokens: number } };
     type: string;
+    name: string;
   }[];
 };
 
@@ -141,21 +142,18 @@ export default function Home() {
 
   const agent_thoughts: Record<
     string,
-    { model: string; type: string; thought: string }
+    { model: string; thought: string }
   > = {};
   const agent_stats: Record<string, { score: number; reputation: reputation }> =
     {};
   const evolution_stats = this_round_data.stats;
 
   this_round_data.match_records.flat().forEach((agent) => {
-    const [model, type] = agent.name.split("(");
-    const clean_model = model.trim();
-    const clean_type = type.replace(")", "").trim();
+    const model = agent.name;
 
-    if (!agent_thoughts[clean_model]) {
-      agent_thoughts[clean_model] = {
-        model: clean_model,
-        type: clean_type,
+    if (!agent_thoughts[model]) {
+      agent_thoughts[model] = {
+        model: model,
         thought: agent.response.startsWith("Thought:")
           ? agent.response
           : `... sitting out this round ...`,
@@ -163,13 +161,13 @@ export default function Home() {
     }
 
     // Aggregate stats
-    if (!agent_stats[clean_model]) {
-      agent_stats[clean_model] = {
+    if (!agent_stats[model]) {
+      agent_stats[model] = {
         score: 0,
         reputation: agent.reputation,
       };
     }
-    agent_stats[clean_model].score += agent.points;
+    agent_stats[model].score += agent.points;
   });
 
   const thoughts = Object.entries(agent_thoughts).map(

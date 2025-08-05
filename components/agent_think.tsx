@@ -1,6 +1,5 @@
 interface Thought {
   model: string;
-  type: string;
   thought: string;
 }
 
@@ -15,11 +14,10 @@ return (
       
       <div className="thoughts-list">
         {
-          thoughts.map(({ model, type, thought }, i) => (
+          thoughts.map(({ model, thought }, i) => (
             <div key={i} className="thought-card">
               <div className="thought-header">
                 <span className="thought-model">{model}</span>
-                <span className="thought-type">{type}</span>
               </div>
               
               <div className="thought-content">
