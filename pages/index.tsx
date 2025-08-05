@@ -170,11 +170,10 @@ export default function Home() {
     agent_stats[model].score += agent.points;
   });
 
-  const thoughts = Object.entries(agent_thoughts).map(
-    ([model, thoughtObj]) => ({
+  const thoughts = Object.entries(agent_thoughts).map(([model, thoughtObj]) => ({
       ...thoughtObj,
-    })
-  );
+      name: model,
+  }));
 
   const stats = Object.entries(agent_stats).map(([model, stat], i) => ({
     model,
