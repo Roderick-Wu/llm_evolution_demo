@@ -1,17 +1,31 @@
+import React, { useMemo } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
   Legend,
   Colors,
+  CategoryScale,
+  LinearScale,
+  BarElement,
 } from 'chart.js';
-ChartJS.register(ArcElement, Tooltip, Legend, Colors);
+import { Pie, Bar } from 'react-chartjs-2';
 
-import { Pie } from 'react-chartjs-2';
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  Colors,
+  CategoryScale,
+  LinearScale,
+  BarElement
+);
 
 type PopulationItem = {
   model: string;
   count: number;
+  score: number;
+  reputation: number;
 };
 
 interface PopulationChartProps {
@@ -19,43 +33,103 @@ interface PopulationChartProps {
 }
 
 export default function PopulationChart({ population }: PopulationChartProps) {
-  const data = {
-    labels: population.map(p => p.model),
-    datasets: [{
-      data: population.map(p => p.count),
-      backgroundColor: population.map((_, i) => {
+  // Create stable color map for each model
+  const map: Record<string, string> = {};
+  const sorted_population = population.sort((a, b) => a.model.localeCompare(b.model));
+  const colorMap = useMemo(() => {
+    let i = 0;
+    sorted_population.forEach(p => {
+      if (!map[p.model]) {
         const hue = (i * 360) / population.length;
-        return `hsl(${hue}, 70%, 50%)`;
-      })
+        map[p.model] = `hsl(${hue}, 70%, 50%)`;
+        i++;
+      }
+    });
+    return map;
+  }, [sorted_population.map(p => p.model).join(',')]);
+
+  // Pie chart data
+  const pieData = {
+    labels: sorted_population.map(p => p.model),
+    datasets: [{
+      data: sorted_population.map(p => p.count),
+      backgroundColor: sorted_population.map(p => colorMap[p.model]),
     }]
   };
 
-return (
-      <div className="chart-content">
-        <div className="chart-inner">
-          {data && data.datasets && data.datasets[0]?.data?.length > 0 ? (
-            <div className="chart-canvas">
-              <Pie 
-                data={data}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: true,
-                  plugins: {
-                    legend: {
-                      position: window.innerWidth < 768 ? 'bottom' : 'right',
-                      labels: {
-                        boxWidth: window.innerWidth < 768 ? 12 : 16,
-                        padding: window.innerWidth < 768 ? 8 : 12,
-                        font: {
-                          size: window.innerWidth < 768 ? 11 : 12
-                        },
-                        usePointStyle: true
-                      }
+  // Generic function for bar chart data
+  const makeBarData = (label: string, values: number[]) => ({
+    labels: sorted_population.map(p => p.model),
+    datasets: [{
+      label,
+      data: values,
+      backgroundColor: sorted_population.map(p => colorMap[p.model]),
+    }]
+  });
+
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false // We don't need legend since labels are on X axis
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12 } } },
+      y: { beginAtZero: true }
+    }
+  };
+
+
+  return (
+  <div className="chart-content">
+    <div className="chart-inner">
+      <div className="charts-grid">
+
+        {/* Bar Charts */}
+        <div>
+        <h1>Population</h1>
+          <div className="chart-card chart-container">
+            <Bar data={makeBarData('Population', population.map(p => p.count))} options={barOptions} />
+          </div>
+        </div>
+        <div>
+          <h1>Score</h1>
+          <div className="chart-card chart-container">
+            <Bar data={makeBarData('Score', population.map(p => p.score))} options={barOptions} />
+          </div>
+        </div>
+        <div>
+          <h1>Reputation</h1>
+          <div className="chart-card chart-container">
+            <Bar data={makeBarData('Reputation', population.map(p => p.reputation))} options={barOptions} />
+          </div>
+        </div>
+
+
+       <div className="chart-card chart-container">
+          {pieData.datasets[0]?.data?.length > 0 ? (
+            <Pie 
+              data={pieData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                  legend: {
+                    position: window.innerWidth < 768 ? 'bottom' : 'right',
+                    labels: {
+                      boxWidth: window.innerWidth < 768 ? 12 : 16,
+                      padding: window.innerWidth < 768 ? 8 : 12,
+                      font: {
+                        size: window.innerWidth < 768 ? 11 : 12
+                      },
+                      usePointStyle: true
                     }
                   }
-                }}
-              />
-            </div>
+                }
+              }}
+            />
           ) : (
             <div className="chart-empty">
               <div className="chart-empty-icon">
@@ -69,5 +143,8 @@ return (
           )}
         </div>
       </div>
-  );
+    </div>
+  </div>
+);
+
 }

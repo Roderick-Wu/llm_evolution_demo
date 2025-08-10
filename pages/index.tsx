@@ -181,10 +181,19 @@ export default function Home() {
     reputation: stat.reputation.cooperation_rate ?? 0,
   }));
 
-  const populationChart = Object.keys(agent_stats).map((model, i) => ({
+  const populationChart = Object.entries(agent_stats).map(([model, stat], i) => ({
     model,
     count: evolution_stats[i].population * 100, // scale for visualization
+    score: stat.score,
+    reputation: stat.reputation.cooperation_rate ?? 0,
   }));
+
+  // const populationChart = Object.keys(agent_stats).map((model, i) => ({
+  //   model,
+  //   count: evolution_stats[i].population * 100, // scale for visualization
+  //   score: evolution_stats[i].fitness,
+  //   reputation: agent_stats[model].reputation.cooperation_rate ?? 0,
+  // }));
 
   return (
     <div className="app-container">
@@ -213,26 +222,23 @@ export default function Home() {
 
       <div className="main-layout">
         <div className="upperbar">
-          <div className="info-section">
-            <h2 className="upperbar-title">Game Setup</h2>
-            <div className="game-setup-item">
-              <strong>Game Type:</strong> {game_data?.game.type}
+          <div className="top-row">
+            <div className="info-section">
+              <h2 className="upperbar-title">Game Setup</h2>
+              <div className="game-setup-item">
+                <strong>Game Type:</strong> {game_data?.game.type}
+              </div>
+              <div className="game-setup-item">
+                <strong>Mechanism:</strong> {game_data?.mechanism.type}
+              </div>
+              <div className="game-setup-item">
+                <strong>Initial Population:</strong>{" "}
+                {game_data?.evolution.initial_population}
+              </div>
+              <div className="game-setup-item">
+                <strong>Rounds:</strong> {game_data?.evolution.steps}
+              </div>
             </div>
-            <div className="game-setup-item">
-              <strong>Mechanism:</strong> {game_data?.mechanism.type}
-            </div>
-            <div className="game-setup-item">
-              <strong>Initial Population:</strong>{" "}
-              {game_data?.evolution.initial_population}
-            </div>
-            <div className="game-setup-item">
-              <strong>Rounds:</strong> {game_data?.evolution.steps}
-            </div>
-          </div>
-
-          <div className="chart-section">
-            <h2 className="upperbar-title">Population Chart</h2>
-            <PopulationChart population={populationChart} />
           </div>
 
           <div className="slider-section">
@@ -244,6 +250,13 @@ export default function Home() {
                 onChange={set_selected_round}
               />
             </div>
+          </div>
+
+
+
+          <div className="chart-section">
+            <h2 className="upperbar-title">Population Chart</h2>
+            <PopulationChart population={populationChart} />
           </div>
         </div>
 
